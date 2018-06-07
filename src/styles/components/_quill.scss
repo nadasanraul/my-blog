@@ -1,0 +1,12 @@
+.ql-container {
+    height: 16rem !important;
+}
+
+.ql-invalid {
+    .ql-container.ql-snow {
+        border: 1px solid #a94442;
+    }
+    .ql-toolbar.ql-snow {
+        border: 1px solid #a94442;
+    }
+}

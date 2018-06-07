@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render Header correctly 1`] = `
+<nav
+  className="navbar navbar-expand-lg navbar-dark bg-primary mb-5"
+>
+  <div
+    className="container"
+  >
+    <NavLink
+      activeClassName="active"
+      ariaCurrent="true"
+      className="navbar-brand"
+      to="/"
+    >
+      Cities and Places
+    </NavLink>
+    <button
+      aria-controls="navbarCollapse"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      className="navbar-toggler"
+      data-target="#navbarCollapse"
+      data-toggle="collapse"
+      type="button"
+    >
+      <span
+        className="navbar-toggler-icon"
+      />
+    </button>
+    <div
+      className="collapse navbar-collapse"
+      id="navbarCollapse"
+    >
+      <ul
+        className="navbar-nav mr-auto ml-3"
+      >
+        <li
+          className="nav-item"
+        >
+          <NavLink
+            activeClassName="active"
+            ariaCurrent="true"
+            className="nav-link"
+            to="/dashboard"
+          >
+            Dashboard
+          </NavLink>
+        </li>
+        <li
+          className="nav-item"
+        >
+          <NavLink
+            activeClassName="active"
+            ariaCurrent="true"
+            className="nav-link"
+            to="/create"
+          >
+            Add Post
+          </NavLink>
+        </li>
+        <li
+          className="nav-item"
+        >
+          <NavLink
+            activeClassName="active"
+            ariaCurrent="true"
+            className="nav-link"
+            to="/cities"
+          >
+            Cities
+          </NavLink>
+        </li>
+      </ul>
+      <button
+        className="btn btn-info"
+        onClick={[Function]}
+      >
+        Logout
+      </button>
+    </div>
+  </div>
+</nav>
+`;
