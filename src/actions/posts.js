@@ -93,16 +93,30 @@ export const setPublicPosts = posts => ({
     posts
 });
 
+export const postsAreLoading = bool => ({
+    type: 'POSTS_ARE_LOADING',
+    isLoading: bool
+});
+
 export const startSetPublicPosts = () => {
     return dispatch => {
 
+        dispatch(postsAreLoading(true));
+
+        const uids = []
         const posts = [];
+            
         return database.ref('users')
             .once('value')
             .then(snapshot => {
                 snapshot.forEach(childSnapsot => {
-                    const uid = childSnapsot.key;
-                    return database.ref(`users/${uid}/posts`)
+                    uids.push(childSnapsot.key);
+                });
+            })
+            .then(() => {
+                console.log(uids);
+                uids.forEach((uid) => {
+                    database.ref(`users/${uid}/posts`)
                         .once('value')
                         .then(snapshot => {
                             snapshot.forEach(childSnapsot => {
@@ -111,9 +125,31 @@ export const startSetPublicPosts = () => {
                                     ...childSnapsot.val()
                                 });
                             });
-                            dispatch(setPublicPosts(posts));
-                        });
+                        })
+                        .then(() => { 
+                            setTimeout(() => dispatch(setPublicPosts(posts)), 1);
+                        })
+                        .then(() => dispatch(postsAreLoading(false)))
                 });
             });
     };
 };
+
+// return database.ref('users')
+        //     .once('value')
+        //     .then(snapshot => {
+        //         snapshot.forEach(childSnapsot => {
+        //             const uid = childSnapsot.key;
+        //             database.ref(`users/${uid}/posts`)
+        //                 .once('value')
+        //                 .then(snapshot => {
+        //                     snapshot.forEach(childSnapsot => {
+        //                         posts.push({
+        //                             id: childSnapsot.key,
+        //                             ...childSnapsot.val()
+        //                         });
+        //                     });
+        //                 });
+        //         });
+        //         // dispatch(setPublicPosts(posts));
+        //     }).then(() => dispatch(setPublicPosts(posts)));

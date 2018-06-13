@@ -13,9 +13,11 @@ export const logout = () => ({
 export const startLogin = (email, password) => {
     return () => {
         if(email && password) {
-            return firebase.auth().signInWithEmailAndPassword(email, password);
+            return firebase.auth().signInWithEmailAndPassword(email, password)
+                .catch((error) => console.log('Error:', error));
         } else {
-            return firebase.auth().signInWithPopup(googleAuthProvider);
+            return firebase.auth().signInWithPopup(googleAuthProvider)
+                .catch((error) => console.log('Error:', error));
         }
     }
 };

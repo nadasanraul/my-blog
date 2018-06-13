@@ -36,18 +36,19 @@ ReactDOM.render(<Loading />, document.getElementById('app'));
 firebase.auth().onAuthStateChanged((user) => {
     if(user) {
         store.dispatch(login(user.uid, user.displayName));
-        store.dispatch(startSetPublicPosts()).then(() => {
+        //store.dispatch(startSetPublicPosts()).then(() => {
             store.dispatch(startSetPosts()).then(() => {
                 renderApp();
                 if(history.location.pathname === '/'){
                     history.push('/dashboard');
                 }
             });
-        });
+       // });
     } else {
         store.dispatch(logout());
-        store.dispatch(startSetPublicPosts()).then(() => {
-            setTimeout(() => renderApp(), 300);
-        });
+        renderApp()
+        // store.dispatch(startSetPublicPosts()).then(() => {
+        //     setTimeout(() => renderApp(), 300);
+        // });
     }
 });

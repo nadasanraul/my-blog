@@ -9,19 +9,97 @@ class RegisterPage extends React.Component {
         name: '',
         email: '',
         password: '',
-        passwordConfirm: ''
+        passwordConfirm: '',
+        errors: {
+            nameError: '',
+            emailError: '',
+            passwordError: ''
+        }
     }
 
     onSubmit = e => {
-        e.preventDefault();
-        
-        const user = {
-            displayName: this.state.name,
-            email: this.state.email,
-            password: this.state.password
-        };
 
-        this.props.onRegister(user);
+        e.preventDefault();
+
+        if(!this.state.name && !this.state.email && !this.state.password) {
+            this.setState(() => ({
+                errors: {
+                    nameError: 'Please provide a name',
+                    emailError: 'Please provide an email',
+                    passwordError: 'Please provide a password'
+                }
+            }));
+        } else if (!this.state.name && !this.state.email) {
+            this.setState(() => ({
+                errors: {
+                    nameError: 'Please provide a name',
+                    emailError: 'Please provide an email',
+                }
+            }));
+         } else if (!this.state.name && !this.state.password) {
+            this.setState(() => ({
+                errors: {
+                    nameError: 'Please provide a name',
+                    passwordError: 'Please provide a password'
+                }
+            }));
+         } else if (!this.state.email && !this.state.password) {
+            this.setState(() => ({
+                errors: {
+                    emailError: 'Please provide an email',
+                    passwordError: 'Please provide a password'
+                }
+            }));
+         } else if (!this.state.name) {
+            this.setState(() => ({
+                errors: {
+                    nameError: 'Please provide a name',
+                }
+            }));
+         } else if (!this.state.email) {
+            this.setState(() => ({
+                errors: {
+                    emailError: 'Please provide an email',
+                }
+            }));
+         } else if (!this.state.password) {
+            this.setState(() => ({
+                errors: {
+                    passwordError: 'Please provide a password'
+                }
+            }));
+         } else {
+            if(this.state.password !== this.state.passwordConfirm) {
+                this.setState(() => ({
+                    errors: {
+                        passwordError: 'Passwords do not match'
+                    }
+                }));
+            } else if (this.state.password.length < 6) {
+                this.setState(() => ({
+                    errors: {
+                        passwordError: 'Password must be at least 6 characters'
+                    }
+                }));
+            } else {
+                this.setState(() => ({
+                    errors: {
+                        nameError: '',
+                        emailError: '',
+                        passwordError: ''
+                    }
+                }));
+
+                const user = {
+                    displayName: this.state.name,
+                    email: this.state.email,
+                    password: this.state.password
+                };
+        
+                this.props.onRegister(user);
+            }
+        }
+        
     }
 
     onNameChange = e => {
@@ -54,34 +132,52 @@ class RegisterPage extends React.Component {
                         <div className="form-group">
                             <input 
                                 type="text" 
-                                className="form-control" 
+                                className={`form-control ${this.state.errors.nameError && 'invalid'}`} 
                                 placeholder="Your Name"
                                 value={this.state.name}
                                 onChange={this.onNameChange}
                             />
+                            {
+                                this.state.errors.nameError && 
+                                <small className="form__error">
+                                    {this.state.errors.nameError}
+                                </small>
+                            }
                         </div>
                         <div className="form-group">
                             <input 
                                 type="email" 
-                                className="form-control" 
+                                className={`form-control ${this.state.errors.emailError && 'invalid'}`} 
                                 placeholder="Your Email"
                                 value={this.state.email}
                                 onChange={this.onEmailChange}
                             />
+                            {
+                                this.state.errors.emailError && 
+                                <small className="form__error">
+                                    {this.state.errors.emailError}
+                                </small>
+                            }
                         </div>
                         <div className="form-group">
                             <input 
                                 type="password"
-                                className="form-control" 
+                                className={`form-control ${this.state.errors.passwordError && 'invalid'}`}
                                 placeholder="Your Password"
                                 value={this.state.password}
                                 onChange={this.onPassworChange}
                             />
+                            {
+                                this.state.errors.passwordError && 
+                                <small className="form__error">
+                                    {this.state.errors.passwordError}
+                                </small>
+                            }
                         </div>
                         <div className="form-group">
                             <input 
                                 type="password" 
-                                className="form-control" 
+                                className={`form-control ${this.state.errors.passwordError && 'invalid'}`}
                                 placeholder="Confirm Password"
                                 value={this.state.passwordConfirm}
                                 onChange={this.onPassConfirmChange}

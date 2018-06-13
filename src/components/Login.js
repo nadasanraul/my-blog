@@ -7,7 +7,11 @@ export class Login extends React.Component {
 
     state = {
         email: '',
-        password: ''
+        password: '',
+        errors: {
+            emailError: '',
+            passwordError: ''
+        }
     }
 
     onEmailchange = e => {
@@ -23,7 +27,28 @@ export class Login extends React.Component {
     onSubmit = e => {
         e.preventDefault();
 
-        this.props.startLogin(this.state.email, this.state.password);
+        if(!this.state.email && !this.state.password) {
+            this.setState(() => ({
+                errors: {
+                    emailError: 'Please provide an email',
+                    passwordError: 'Please provide a password'
+                }
+            }));
+        } else if (!this.state.email) {
+            this.setState(() => ({
+                errors: {
+                    emailError: 'Please provide an email'
+                }
+            }));
+        } else if (!this.state.password) {
+            this.setState(() => ({
+                errors: {
+                    passwordError: 'Please provide a password'
+                }
+            }));
+        } else {
+            this.props.startLogin(this.state.email, this.state.password);
+        }
     }
     
     render() {
@@ -36,19 +61,31 @@ export class Login extends React.Component {
                         <input 
                             type="email" 
                             placeholder="Email" 
-                            className="form-control"
+                            className={`form-control ${this.state.errors.emailError && 'invalid'}`}
                             value={this.state.email}
                             onChange={this.onEmailchange}
                         />
+                        {
+                            this.state.errors.emailError && 
+                            <small className="form__error">
+                                {this.state.errors.emailError}
+                            </small>
+                        }
                     </div>
                     <div className="form-group">
                         <input 
                             type="password" 
                             placeholder="Password" 
-                            className="form-control"
+                            className={`form-control ${this.state.errors.passwordError && 'invalid'}`}
                             value={this.state.password}
                             onChange={this.onPasswordChange}
                         />
+                        {
+                            this.state.errors.passwordError && 
+                            <small className="form__error">
+                                {this.state.errors.passwordError}
+                            </small>
+                        }
                     </div>
                     <div className="form-group">
                         <input type="submit" className='btn btn-primary' value='Login'/>
