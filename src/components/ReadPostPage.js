@@ -17,7 +17,7 @@ const ReadPostPage = (props) => (
 );
 
 const mapStateToProps = (state, props) => ({
-    post: state.publicPosts.find(post => post.id === props.match.params.id)
+    post: state.publicPosts.posts.find(post => post.id === props.match.params.id)
 });
 
 export default connect(mapStateToProps)(ReadPostPage);

@@ -114,7 +114,6 @@ export const startSetPublicPosts = () => {
                 });
             })
             .then(() => {
-                console.log(uids);
                 uids.forEach((uid) => {
                     database.ref(`users/${uid}/posts`)
                         .once('value')
