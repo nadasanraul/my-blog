@@ -128,7 +128,7 @@ export const startSetPublicPosts = () => {
                         .then(() => { 
                             setTimeout(() => dispatch(setPublicPosts(posts)), 1);
                         })
-                        .then(() => dispatch(postsAreLoading(false)))
+                        //.then(() => dispatch(postsAreLoading(false)))
                 });
             });
     };
