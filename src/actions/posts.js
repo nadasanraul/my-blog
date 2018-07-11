@@ -18,7 +18,11 @@ export const startAddPost = (data = {}) => {
         const post = {title, author, body, createdAt};
 
         return database.ref(`users/${uid}/posts`).push(post)
-            .then(ref => dispatch(addPost({id: ref.key, ...post})));
+            .then(ref => {
+                database.ref('posts').child(`${ref.key}`).set(post)
+                    .then(() => dispatch(addPublicPost({id: ref.key, ...post})));
+                dispatch(addPost({id: ref.key, ...post}))
+        });
     }
 }
 
@@ -32,6 +36,8 @@ export const editPost = (id, updates) => ({
 export const startEditPost = (id, updates) => {
     return (dispatch, getState) => {
         const uid = getState().auth.uid;
+
+        database.ref(`posts/${id}`).update({...updates});
 
         return database.ref(`users/${uid}/posts/${id}`)
             .update({...updates})
@@ -49,6 +55,8 @@ export const startRemovePost = (id) => {
     return (dispatch, getState) => {
         const uid = getState().auth.uid;
 
+        database.ref(`posts/${id}`).remove();
+
         return database.ref(`users/${uid}/posts/${id}`)
             .remove()
             .then(() => dispatch(removePost(id)));
@@ -56,9 +64,10 @@ export const startRemovePost = (id) => {
 };
 
 //Set posts
-export const setPosts = posts => ({
+export const setPosts = (posts, isLoading) => ({
     type: 'SET_POSTS',
-    posts
+    posts,
+    isLoading
 });
 
 
@@ -88,67 +97,28 @@ export const addPublicPost = post => ({
 });
 
 //Setting public posts for reading
-export const setPublicPosts = posts => ({
+const setPublicPosts = (posts, isLoading) => ({
     type: 'SET_PUBLIC_POSTS',
-    posts
+    posts,
+    isLoading
 });
 
-export const postsAreLoading = bool => ({
-    type: 'POSTS_ARE_LOADING',
-    isLoading: bool
-});
 
 export const startSetPublicPosts = () => {
     return dispatch => {
-
-        dispatch(postsAreLoading(true));
-
-        const uids = []
+       
         const posts = [];
             
-        return database.ref('users')
+        return database.ref(`posts`)
             .once('value')
             .then(snapshot => {
                 snapshot.forEach(childSnapsot => {
-                    uids.push(childSnapsot.key);
+                    posts.push({
+                        id: childSnapsot.key,
+                        ...childSnapsot.val()
+                    });
                 });
             })
-            .then(() => {
-                uids.forEach((uid) => {
-                    database.ref(`users/${uid}/posts`)
-                        .once('value')
-                        .then(snapshot => {
-                            snapshot.forEach(childSnapsot => {
-                                posts.push({
-                                    id: childSnapsot.key,
-                                    ...childSnapsot.val()
-                                });
-                            });
-                        })
-                        .then(() => { 
-                            setTimeout(() => dispatch(setPublicPosts(posts)), 1);
-                        })
-                        //.then(() => dispatch(postsAreLoading(false)))
-                });
-            });
+            .then(() => dispatch(setPublicPosts(posts, false)))
     };
 };
-
-// return database.ref('users')
-        //     .once('value')
-        //     .then(snapshot => {
-        //         snapshot.forEach(childSnapsot => {
-        //             const uid = childSnapsot.key;
-        //             database.ref(`users/${uid}/posts`)
-        //                 .once('value')
-        //                 .then(snapshot => {
-        //                     snapshot.forEach(childSnapsot => {
-        //                         posts.push({
-        //                             id: childSnapsot.key,
-        //                             ...childSnapsot.val()
-        //                         });
-        //                     });
-        //                 });
-        //         });
-        //         // dispatch(setPublicPosts(posts));
-        //     }).then(() => dispatch(setPublicPosts(posts)));

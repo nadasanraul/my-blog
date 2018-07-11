@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import PostForm from './PostForm';
-import {startAddPost, startSetPublicPosts} from '../actions/posts';
+import {startAddPost} from '../actions/posts';
 
 const AddPost = (props) => (
     <div className='container'>
@@ -10,7 +10,6 @@ const AddPost = (props) => (
             user={props.user}
             onSubmit={(post) => {
                 props.startAddPost(post);
-                props.startSetPublicPosts();
                 props.history.push('/dashboard');
             }}
         />
@@ -23,7 +22,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
     startAddPost: (post) => dispatch(startAddPost(post)),
-    startSetPublicPosts: () => dispatch(startSetPublicPosts())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddPost);

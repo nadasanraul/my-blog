@@ -7,21 +7,15 @@ import Loading from './Loading';
 import {startSetPublicPosts} from '../actions/posts';
 
 export class ReadPostPage extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            isLoading: props.isLoading
-        };
-    }
-    componentWillMount() {
-        this.props.startSetPublicPosts();
-    }
+
     componentDidMount() {
-        this.state.isLoading = false;
+        if(this.props.isLoading === true) {
+            this.props.startSetPublicPosts();
+        }
     }
 
     render() {
-        if(this.state.isLoading === true) {
+        if(this.props.isLoading === true) {
             return (
                 <Loading />
             )
@@ -29,12 +23,14 @@ export class ReadPostPage extends React.Component {
             return (
                 <div>
                     <Header />
-                    <div className="container">
-                        <h1>{this.props.post.title}</h1>
-                        <small>Written by {this.props.post.author} on {moment(this.props.post.createdAt).format('MMMM Do, YYYY')}</small>
-                        <hr/>
-                        {ReactHtmlParser(this.props.post.body)}
-                    </div>
+                    {!this.props.post ? <h1>No post found</h1> : 
+                        <div className="container">
+                            <h1>{this.props.post.title}</h1>
+                            <small>Written by {this.props.post.author} on {moment(this.props.post.createdAt).format('MMMM Do, YYYY')}</small>
+                            <hr/>
+                            {ReactHtmlParser(this.props.post.body)}
+                        </div>
+                    }
                 </div>
             );
         }

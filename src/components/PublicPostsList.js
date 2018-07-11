@@ -7,21 +7,15 @@ import Loading from './Loading';
 
 
 export class PublicPostsList extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoading: props.isLoading
-        };
-    }
-    componentWillMount() {
-        this.props.startSetPublicPosts();
-    }
+
     componentDidMount() {
-       this.state.isLoading = false;
+        if(this.props.isLoading === true) {
+            this.props.startSetPublicPosts();
+        }
     }
 
     render () {
-        if(this.state.isLoading == true) {
+        if(this.props.isLoading === true) {
             return (
                 <Loading />
             )
